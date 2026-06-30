@@ -1,0 +1,2 @@
+// It is a  resume parser that uses machine learning to extract information from resumes and match it with job descriptions
+// Architecture Update: We will use Hiring Agent as the backend to make the resume parser more accurate.
