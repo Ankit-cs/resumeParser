@@ -1,75 +1,91 @@
-# React + TypeScript + Vite
+# Parsify
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+**Know Your Worth. Track Your Progress. Get Hired.**
 
-Currently, two official plugins are available:
+Parsify is a cutting-edge, real-time resume analyzer and ATS scoring platform designed to help candidates optimize their resumes and track their applications. Built with modern web technologies and a sleek, premium dark-mode aesthetic, Parsify gives you the feedback you need to stay ahead.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **AI-Powered ATS Scoring:** Get immediate, intelligent feedback on your resume's content, structure, and formatting.
+- **Serverless Architecture:** Fully powered by [Puter.js](https://puter.com/) for authentication, key-value storage, and file hosting. No backend required!
+- **Premium Dark-Mode UI:** A gorgeous, forced dark-mode interface featuring diagonal grid backgrounds, radial gradients, and fluid animations.
+- **Beautiful Typography:** Powered by **Geist** and **Geist Mono** fonts for that crisp, modern developer aesthetic.
+- **Blazing Fast:** Built on top of **React Router 7**, **Vite**, and **Tailwind CSS V4**.
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Architecture
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```mermaid
+graph TD
+    User([User]) --> |Uploads Resume| Frontend(Parsify Frontend<br/>React Router 7)
+    
+    subgraph Puter.js Serverless Ecosystem
+        Frontend --> |Authenticates| PuterAuth(Puter.js Auth)
+        Frontend --> |Stores PDF & Images| PuterFS(Puter.js FS)
+        Frontend --> |Stores Metadata & ATS Score| PuterKV(Puter.js KV)
+        Frontend --> |Analyzes Resume| PuterAI(Puter.js AI / Llama)
+    end
+    
+    PuterAI -.-> |Returns Feedback| Frontend
+    Frontend -.-> |Renders ScoreBadge & Gauge| User
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+---
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+## Tech Stack
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+- **Framework:** React Router 7 (Vite)
+- **Styling:** Tailwind CSS V4 + `tw-animate-css`
+- **Typography:** Geist & Geist Mono (Google Fonts)
+- **Backend/BaaS:** Puter.js (Auth, KV, FS, AI)
+- **Icons/Assets:** Custom SVG Icons & Tabler Icons
 
+---
+
+## Getting Started
+
+### 1. Installation
+
+Clone the repository and install the dependencies:
+
+```bash
+npm install
 ```
+
+### 2. Development
+
+Start the development server with Hot Module Replacement (HMR):
+
+```bash
+npm run dev
+```
+
+Your application will be available at `http://localhost:5173`.
+
+### 3. Building for Production
+
+Create a production build:
+
+```bash
+npm run build
+```
+
+Then serve it using the built-in React Router server:
+
+```bash
+npm run start
+```
+
+---
+
+## UI/UX Highlights
+
+- Custom diagonal line grids and radial gradient overlays to give a deep, immersive background.
+- `font-mono` styling applied dynamically to all ATS scores and metrics to emphasize the data.
+- Smooth transitions and hover states for all interactive elements.
+
+---
+Built and designed for your career success.
