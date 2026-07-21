@@ -1,0 +1,1 @@
+For writing any type of notes

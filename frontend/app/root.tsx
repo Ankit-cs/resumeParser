@@ -10,7 +10,7 @@ import {
 import { useEffect } from "react";
 import { usePuterStore } from "./lib/puter";
 import { ThemeProvider } from "./lib/theme";
-import type { Route } from "./+types/root";
+import type { Route } from "./types/root";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
