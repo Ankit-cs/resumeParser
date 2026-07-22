@@ -5,7 +5,6 @@ import {
   AccordionHeader,
   AccordionItem,
 } from "./Accordion";
-import type { Feedback } from "types";
 
 const ScoreBadge = ({ score }: { score: number }) => {
   return (
@@ -34,7 +33,7 @@ const ScoreBadge = ({ score }: { score: number }) => {
                         : "text-badge-red-text"
             )}
         >
-          <span className="font-mono">{score}/100</span>
+          {score}/100
         </p>
       </div>
   );
