@@ -10,7 +10,7 @@ import {
 import { useEffect } from "react";
 import { usePuterStore } from "./lib/puter";
 import { ThemeProvider } from "./lib/theme";
-import type { Route } from "./types/root";
+import type { Route } from "./+types/root";
 import "./app.css";
 
 export const links: Route.LinksFunction = () => [
@@ -22,7 +22,7 @@ export const links: Route.LinksFunction = () => [
   },
   {
     rel: "stylesheet",
-    href: "https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Geist+Mono:wght@100..900&display=swap",
+    href: "https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap",
   },
 ];
 
@@ -34,7 +34,7 @@ export function Layout({ children }: { children: React.ReactNode }) {
   }, [init]);
   return (
     <ThemeProvider>
-      <html lang="en" className="dark">
+      <html lang="en">
         <head>
           <meta charSet="utf-8" />
           <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -42,14 +42,6 @@ export function Layout({ children }: { children: React.ReactNode }) {
           <Links />
         </head>
         <body>
-          <div
-            className="pointer-events-none fixed inset-0 z-[-1]"
-            style={{
-              background:
-                "radial-gradient(56rem 38rem at 50% 50%, rgba(113,113,122,0.2) 0%, rgba(113,113,122,0.1) 32%, rgba(7,7,7,0) 72%)",
-            }}
-          />
-          <div className="pointer-events-none fixed inset-0 z-[-1] bg-[repeating-linear-gradient(-45deg,rgba(255,255,255,0.07)_0px,rgba(255,255,255,0.07)_1px,transparent_1px,transparent_7px)]" />
           <script src="https://js.puter.com/v2/"></script>
           {children}
           <ScrollRestoration />
