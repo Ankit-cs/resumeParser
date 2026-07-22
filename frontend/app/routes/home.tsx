@@ -52,7 +52,7 @@ export default function Home() {
     loadResumes()
   }, []);
 
-  return <main>
+  return <main className={`bg-cover ${theme === 'dark' ? 'dark-bg' : ''}`}>
     <Navbar />
 
     <section className="main-section">

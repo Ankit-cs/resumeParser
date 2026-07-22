@@ -85,7 +85,7 @@ const Upload = () => {
     }
 
     return (
-        <main>
+        <main className={`bg-cover ${theme === 'dark' ? 'dark-bg' : 'light-bg'}`}>
             <Navbar />
 
             <section className="main-section">

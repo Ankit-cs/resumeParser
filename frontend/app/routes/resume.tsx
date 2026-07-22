@@ -88,7 +88,7 @@ const Resume = () => {
     }, [id]);
 
     return (
-        <main className="pt-0">
+        <main className={`pt-0 bg-cover ${theme === 'dark' ? 'dark-bg' : 'light-bg'}`}>
             <Navbar/>
             <nav className="resume-nav">
                 <Link to="/" className="back-button">
