@@ -48,3 +48,11 @@ export const clearStoredResumes = (): void => {
     console.error("Error clearing resumes:", e);
   }
 };
+
+export const deleteResume = (id: string): void => {
+  if (typeof window === "undefined") return;
+  const remaining = getStoredResumes().filter((resume) => resume.id !== id);
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(remaining));
+};
+
+export const updateResume = (resume: Resume): void => saveResume(resume);
