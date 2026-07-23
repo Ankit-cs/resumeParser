@@ -1,0 +1,18 @@
+import type { HiringEvaluation } from "../../types";
+
+const categoryLabels = { openSource: "Open Source", selfProjects: "Self Projects", production: "Production Experience", technicalSkills: "Technical Skills" };
+
+export default function HiringAgentReport({ evaluation }: { evaluation: HiringEvaluation }) {
+  const categories = Object.entries(evaluation.scores) as [keyof typeof evaluation.scores, HiringEvaluation["scores"][keyof HiringEvaluation["scores"]]][];
+  return <div className="flex flex-col gap-6 w-full">
+    <section className="rounded-2xl bg-white dark:bg-gray-800 shadow-md p-6">
+      <div className="flex items-baseline justify-between gap-4"><div><h2 className="text-2xl font-bold dark:text-white">Hiring Agent evaluation</h2><p className="text-sm text-gray-500">Evidence-based score; public GitHub is optional.</p></div><p className="text-3xl font-bold text-green-600">{evaluation.overallScore}/120</p></div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-6">{categories.map(([key, score]) => <div key={key} className="rounded-xl border border-gray-200 dark:border-gray-700 p-4"><div className="flex justify-between font-semibold dark:text-white"><span>{categoryLabels[key]}</span><span>{score.score}/{score.max}</span></div><p className="mt-2 text-sm text-gray-600 dark:text-gray-300">{score.evidence || "No specific evidence returned."}</p></div>)}</div>
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-4 text-sm"><div className="rounded-xl bg-green-50 p-4 text-green-800"><b>Bonus +{evaluation.bonusPoints.total}</b><p>{evaluation.bonusPoints.breakdown}</p></div><div className="rounded-xl bg-amber-50 p-4 text-amber-800"><b>Deductions −{evaluation.deductions.total}</b><p>{evaluation.deductions.reasons}</p></div></div>
+    </section>
+    <section className="rounded-2xl bg-white dark:bg-gray-800 shadow-md p-6"><h2 className="text-xl font-bold dark:text-white">Job match · {evaluation.jobMatch.score}/100</h2><div className="mt-3"><p className="font-medium text-green-700">Matched: {evaluation.jobMatch.matchedKeywords.join(", ") || "None identified"}</p><p className="mt-2 font-medium text-amber-700">Consider adding: {evaluation.jobMatch.missingKeywords.join(", ") || "No clear gaps identified"}</p></div></section>
+    <section className="rounded-2xl bg-white dark:bg-gray-800 shadow-md p-6 grid grid-cols-1 sm:grid-cols-2 gap-6"><div><h2 className="text-xl font-bold dark:text-white">Key strengths</h2><ul className="list-disc pl-5 mt-2 text-gray-600 dark:text-gray-300">{evaluation.keyStrengths.map((item) => <li key={item}>{item}</li>)}</ul></div><div><h2 className="text-xl font-bold dark:text-white">Highest-impact improvements</h2><ul className="list-disc pl-5 mt-2 text-gray-600 dark:text-gray-300">{evaluation.areasForImprovement.map((item) => <li key={item}>{item}</li>)}</ul></div></section>
+    <section className="rounded-2xl bg-white dark:bg-gray-800 shadow-md p-6"><h2 className="text-xl font-bold dark:text-white">GitHub enrichment</h2><p className="text-sm text-gray-500">{evaluation.github.unavailableReason || `Top public projects for @${evaluation.github.username}`}</p><div className="mt-3 grid gap-3">{evaluation.github.projects.map((project) => <a key={project.url} href={project.url} target="_blank" rel="noreferrer" className="rounded-lg border p-3 hover:bg-gray-50 dark:text-white"><b>{project.name}</b> · ★ {project.stars} · {project.language || "Unspecified"}<p className="text-sm text-gray-500">{project.description}</p></a>)}</div></section>
+    <p className="text-xs text-gray-500">Safety: {evaluation.safety.note} {evaluation.fairness.note} Model: {evaluation.metadata.model}.</p>
+  </div>;
+}
