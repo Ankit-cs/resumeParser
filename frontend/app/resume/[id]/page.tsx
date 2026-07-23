@@ -11,6 +11,8 @@ import ATS from "~/components/ATS";
 import Details from "~/components/Details";
 import type { Feedback, Resume as ResumeType } from "../../../types";
 import Navbar from "~/components/Navbar";
+import HiringAgentReport from "~/components/HiringAgentReport";
+import AnalysisActions from "~/components/AnalysisActions";
 
 const ResumeDetail = () => {
     const { isAuthenticated, isLoading } = useAuthStore();
@@ -19,6 +21,7 @@ const ResumeDetail = () => {
     const [imageUrl, setImageUrl] = useState('');
     const [resumeUrl, setResumeUrl] = useState('');
     const [feedback, setFeedback] = useState<Feedback | null>(null);
+    const [resume, setResume] = useState<ResumeType | null>(null);
     const router = useRouter();
     const { theme } = useTheme();
 
@@ -32,6 +35,7 @@ const ResumeDetail = () => {
         if (!id) return;
         const resume: ResumeType | null = getResumeById(id);
         if (resume) {
+            setResume(resume);
             setFeedback(resume.feedback);
             setImageUrl(resume.imagePath || '/images/resume_01.png');
             setResumeUrl(resume.resumePath || '#');
@@ -70,6 +74,8 @@ const ResumeDetail = () => {
                     {feedback ? (
                         <div className="flex flex-col gap-8 animate-in fade-in duration-1000">
                             <Summary feedback={feedback} />
+                            {feedback.hiringEvaluation && <HiringAgentReport evaluation={feedback.hiringEvaluation} />}
+                            {resume && <AnalysisActions resume={resume} onDeleted={() => router.push("/")} />}
                             <ATS score={feedback.ATS.score || 0} suggestions={feedback.ATS.tips || []} />
                             <Details feedback={feedback} />
                         </div>
