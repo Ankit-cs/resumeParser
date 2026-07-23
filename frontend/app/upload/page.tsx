@@ -5,7 +5,7 @@ import Navbar from "~/components/Navbar";
 import FileUploader from "~/components/FileUploader";
 import { useAuthStore } from "~/lib/authStore";
 import { useRouter } from "next/navigation";
-import { convertPdfToImage } from "~/lib/pdf2img";
+import { convertPdfToImage, extractTextFromPdf } from "~/lib/pdf2img";
 import { generateUUID } from "~/lib/utils";
 import { saveResume } from "~/lib/storage";
 import { useTheme } from "~/lib/theme";
@@ -17,6 +17,8 @@ const Upload = () => {
     const [isProcessing, setIsProcessing] = useState(false);
     const [statusText, setStatusText] = useState('');
     const [file, setFile] = useState<File | null>(null);
+    const [githubUrl, setGithubUrl] = useState('');
+    const [roleTemplate, setRoleTemplate] = useState('general');
     const { theme } = useTheme();
 
     useEffect(() => {
@@ -44,7 +46,9 @@ const Upload = () => {
                 console.warn('Could not convert PDF to image, using default preview:', e);
             }
 
-            setStatusText('Analyzing resume with AI...');
+            setStatusText('Extracting resume text...');
+            const { text: resumeText, pageCount } = await extractTextFromPdf(file);
+            setStatusText('Evaluating evidence, job match, and optional GitHub projects...');
             const response = await fetch('/api/analyze', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -52,7 +56,10 @@ const Upload = () => {
                     companyName,
                     jobTitle,
                     jobDescription,
-                    resumeText: file.name,
+                    resumeText,
+                    pageCount,
+                    githubUrl,
+                    roleTemplate,
                 }),
             });
 
@@ -61,6 +68,7 @@ const Upload = () => {
             }
 
             const feedback = await response.json();
+            if (feedback.error) throw new Error(feedback.error);
             const uuid = generateUUID();
 
             const newResume: Resume = {
@@ -117,6 +125,16 @@ const Upload = () => {
                             <div className="form-div">
                                 <label htmlFor="company-name" className="text-gray-700 dark:text-gray-300">Company Name</label>
                                 <input type="text" name="company-name" placeholder="Company Name" id="company-name" required />
+                            </div>
+                            <div className="form-div">
+                                <label htmlFor="role-template" className="text-gray-700 dark:text-gray-300">Role template</label>
+                                <select id="role-template" value={roleTemplate} onChange={(e) => setRoleTemplate(e.target.value)} className="w-full rounded-2xl p-4 dark:bg-gray-700 dark:text-white">
+                                    <option value="general">General software role</option><option value="frontend">Frontend developer</option><option value="backend">Backend developer</option><option value="data">Data / ML role</option>
+                                </select>
+                            </div>
+                            <div className="form-div">
+                                <label htmlFor="github-url" className="text-gray-700 dark:text-gray-300">GitHub profile URL (optional)</label>
+                                <input id="github-url" type="url" value={githubUrl} onChange={(e) => setGithubUrl(e.target.value)} placeholder="https://github.com/username" />
                             </div>
                             <div className="form-div">
                                 <label htmlFor="job-title" className="text-gray-700 dark:text-gray-300">Job Title</label>
