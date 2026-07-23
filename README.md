@@ -1,91 +1,52 @@
-# Parsify
+# Parsify Frontend
 
 **Know Your Worth. Track Your Progress. Get Hired.**
 
-Parsify is a cutting-edge, real-time resume analyzer and ATS scoring platform designed to help candidates optimize their resumes and track their applications. Built with modern web technologies and a sleek, premium dark-mode aesthetic, Parsify gives you the feedback you need to stay ahead.
+Parsify is a frontend-only resume feedback and tracking app built with a modern Next.js stack. The app focuses on a polished dashboard experience for uploading resumes, reviewing ATS-style feedback, and tracking progress with a dark themed interface.
 
----
+## What’s Included
 
-## Features
+- Resume dashboard with stored resume cards and upload prompts.
+- Auth-gated home flow that redirects unauthenticated users to sign in.
+- Resume upload and feedback views with a structured score breakdown.
+- Dark mode toggle and theme-aware layout shell.
+- Client-side storage helpers for keeping resume data between sessions.
 
-- **AI-Powered ATS Scoring:** Get immediate, intelligent feedback on your resume's content, structure, and formatting.
-- **Serverless Architecture:** Fully powered by [Puter.js](https://puter.com/) for authentication, key-value storage, and file hosting. No backend required!
-- **Premium Dark-Mode UI:** A gorgeous, forced dark-mode interface featuring diagonal grid backgrounds, radial gradients, and fluid animations.
-- **Beautiful Typography:** Powered by **Geist** and **Geist Mono** fonts for that crisp, modern developer aesthetic.
-- **Blazing Fast:** Built on top of **React Router 7**, **Vite**, and **Tailwind CSS V4**.
+## Recent Frontend Updates
 
----
-
-## Architecture
-
-```mermaid
-graph TD
-    User([User]) --> |Uploads Resume| Frontend(Parsify Frontend<br/>React Router 7)
-    
-    subgraph Puter.js Serverless Ecosystem
-        Frontend --> |Authenticates| PuterAuth(Puter.js Auth)
-        Frontend --> |Stores PDF & Images| PuterFS(Puter.js FS)
-        Frontend --> |Stores Metadata & ATS Score| PuterKV(Puter.js KV)
-        Frontend --> |Analyzes Resume| PuterAI(Puter.js AI / Llama)
-    end
-    
-    PuterAI -.-> |Returns Feedback| Frontend
-    Frontend -.-> |Renders ScoreBadge & Gauge| User
-```
-
----
+- Fixed the app shell so the theme provider runs in a client-safe layout.
+- Reworked the styling pipeline to match the installed Tailwind CSS 3 setup.
+- Added a typed feedback model to the details view so category scores and tips render cleanly.
+- Kept the home page focused on the resume dashboard, loading state, and upload call to action.
 
 ## Tech Stack
 
-- **Framework:** React Router 7 (Vite)
-- **Styling:** Tailwind CSS V4 + `tw-animate-css`
-- **Typography:** Geist & Geist Mono (Google Fonts)
-- **Backend/BaaS:** Puter.js (Auth, KV, FS, AI)
-- **Icons/Assets:** Custom SVG Icons & Tabler Icons
+- **Framework:** Next.js 15
+- **UI:** React 19 + TypeScript
+- **Styling:** Tailwind CSS 3
+- **State:** Zustand and local storage helpers
+- **Media:** pdf.js, react-dropzone, and custom SVG assets
+- **Scripts:** `npm run dev`, `npm run build`, `npm run start`, `npm run lint`
 
----
+## Project Structure
+
+- `app/` - App Router pages, layout, and feature routes.
+- `app/components/` - Shared UI blocks such as the navbar, resume cards, and feedback details.
+- `app/lib/` - Theme, auth, storage, and utility helpers.
+- `types/` - Shared TypeScript types for resumes and feedback data.
 
 ## Getting Started
 
-### 1. Installation
-
-Clone the repository and install the dependencies:
-
 ```bash
 npm install
-```
-
-### 2. Development
-
-Start the development server with Hot Module Replacement (HMR):
-
-```bash
 npm run dev
 ```
 
-Your application will be available at `http://localhost:5173`.
-
-### 3. Building for Production
-
-Create a production build:
+For production builds:
 
 ```bash
 npm run build
-```
-
-Then serve it using the built-in React Router server:
-
-```bash
 npm run start
 ```
 
----
-
-## UI/UX Highlights
-
-- Custom diagonal line grids and radial gradient overlays to give a deep, immersive background.
-- `font-mono` styling applied dynamically to all ATS scores and metrics to emphasize the data.
-- Smooth transitions and hover states for all interactive elements.
-
----
-Built and designed for your career success.
+The app is configured to run from the `frontend/` folder.
