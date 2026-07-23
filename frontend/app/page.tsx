@@ -9,6 +9,7 @@ import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { useTheme } from "~/lib/theme";
 import type { Resume } from "../types";
+import ComparisonPanel from "~/components/ComparisonPanel";
 
 export default function Home() {
   const { isAuthenticated } = useAuthStore();
@@ -60,11 +61,14 @@ export default function Home() {
         )}
 
         {!loadingResumes && resumes.length > 0 && (
+          <>
+          <ComparisonPanel resumes={resumes} />
           <div className="resumes-section">
             {resumes.map((resume) => (
               <ResumeCard key={resume.id} resume={resume} />
             ))}
           </div>
+          </>
         )}
 
         {!loadingResumes && resumes?.length === 0 && (
