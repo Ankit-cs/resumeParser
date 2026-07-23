@@ -4,6 +4,11 @@ export interface PdfConversionResult {
     error?: string;
 }
 
+export interface PdfTextResult {
+    text: string;
+    pageCount: number;
+}
+
 let pdfjsLib: any = null;
 let isLoading = false;
 let loadPromise: Promise<any> | null = null;
@@ -102,4 +107,22 @@ export async function convertPdfToImage(
             error: `Failed to convert PDF: ${err}`,
         };
     }
+}
+
+/** Extract selectable text from all PDF pages for real resume analysis. */
+export async function extractTextFromPdf(file: File): Promise<PdfTextResult> {
+    if (!file.type.includes("pdf")) throw new Error("Only PDF files can be analyzed.");
+
+    const lib = await loadPdfJs();
+    const pdf = await lib.getDocument({ data: await file.arrayBuffer() }).promise;
+    const pages: string[] = [];
+    for (let pageNumber = 1; pageNumber <= pdf.numPages; pageNumber += 1) {
+        const page = await pdf.getPage(pageNumber);
+        const content = await page.getTextContent();
+        const pageText = content.items.map((item: { str?: string }) => item.str || "").join(" ").replace(/\s+/g, " ").trim();
+        if (pageText) pages.push(pageText);
+    }
+    const text = pages.join("\n\n").trim();
+    if (!text) throw new Error("No selectable text was found. Upload a text-based PDF or add OCR support.");
+    return { text, pageCount: pdf.numPages };
 }
