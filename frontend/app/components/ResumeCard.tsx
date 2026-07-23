@@ -1,46 +1,31 @@
-import {Link} from "react-router";
+'use client';
+
+import Link from "next/link";
 import ScoreCircle from "~/components/ScoreCircle";
-import {useEffect, useState} from "react";
-import {usePuterStore} from "~/lib/puter";
+import { useEffect, useState } from "react";
 import type { Resume } from "../../types";
 
 const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath } }: { resume: Resume }) => {
-    const { fs } = usePuterStore();
     const [resumeUrl, setResumeUrl] = useState('');
 
     useEffect(() => {
-        const loadResume = async () => {
-            console.log('Loading resume image for path:', imagePath);
-            const isPublicAsset =
-                imagePath.startsWith('/images/') ||
-                imagePath.startsWith('/assets/') ||
-                imagePath.startsWith('/public/');
+        if (!imagePath) return;
+        const isPublicAsset =
+            imagePath.startsWith('/images/') ||
+            imagePath.startsWith('/assets/') ||
+            imagePath.startsWith('/public/') ||
+            imagePath.startsWith('data:') ||
+            imagePath.startsWith('http');
 
-            if (isPublicAsset) {
-                // Public asset URL
-                console.log('Using public asset URL:', imagePath);
-                setResumeUrl(imagePath);
-            } else {
-                // Load from Puter FS
-                const path = imagePath.startsWith('/') ? imagePath : '/' + imagePath;
-                console.log('Reading from Puter FS:', path);
-                const blob = await fs.read(path);
-                console.log('Blob received:', blob);
-                if (!blob) {
-                    console.log('No blob returned for path:', path);
-                    return;
-                }
-                let url = URL.createObjectURL(blob);
-                console.log('Created blob URL:', url);
-                setResumeUrl(url);
-            }
+        if (isPublicAsset) {
+            setResumeUrl(imagePath);
+        } else {
+            setResumeUrl(imagePath.startsWith('/') ? imagePath : '/' + imagePath);
         }
-
-        loadResume();
     }, [imagePath]);
 
     return (
-        <Link to={`/resume/${id}`} className="resume-card animate-in fade-in duration-1000">
+        <Link href={`/resume/${id}`} className="resume-card animate-in fade-in duration-1000">
             <div className="resume-card-header">
                 <div className="flex flex-col gap-2">
                     {companyName && <h2 className="text-black font-bold wrap-break-word">{companyName}</h2>}
@@ -58,21 +43,16 @@ const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath }
                             src={resumeUrl}
                             alt="Resume"
                             className="w-full h-[350px] max-sm:h-[200px] object-contain"
-                            onError={(e) => {
-                                console.log('Image failed to load:', resumeUrl);
-                                setResumeUrl('');
-                            }}
-                            onLoad={() => console.log('Image loaded successfully:', resumeUrl)}
+                            onError={() => setResumeUrl('')}
                         />
                     </div>
                 </div>
             ) : (
                 <div className="gradient-border animate-in fade-in duration-1000">
-                    <div className="w-full h-full bg-gray-100 flex items-center justify-center">
-                        <div className="text-gray-500 text-center">
+                    <div className="w-full h-full bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                        <div className="text-gray-500 dark:text-gray-400 text-center">
                             <div className="text-2xl mb-2">📄</div>
                             <div>Resume Preview</div>
-                            <div className="text-xs mt-1">Image: {imagePath}</div>
                         </div>
                     </div>
                 </div>
@@ -80,4 +60,4 @@ const ResumeCard = ({ resume: { id, companyName, jobTitle, feedback, imagePath }
         </Link>
     )
 }
-export default ResumeCard
+export default ResumeCard;
